@@ -1,7 +1,7 @@
 import { SignUpController } from "./sing-up.controller";
 
 describe("SignUp Controller", () => {
-  it("should return 400 if no email is provided", () => {
+  it("Should return 400 if no email is provided", () => {
     const sut = new SignUpController();
     const httpRequest = {
       body: {
@@ -13,5 +13,18 @@ describe("SignUp Controller", () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new Error("Missing Params: email"));
+  });
+
+  it("Should return 400 if no Password is provided", () => {
+    const sut = new SignUpController();
+    const httpRequest = {
+      body: {
+        email: "test@example.com",
+      },
+    };
+
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse.body).toEqual(new Error("Missing Params: password"));
   });
 });

@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky install",
-    "test": "jest --watch --collectCoverage=false",
-    "test:staged": "jest"
+    "test": "jest --silent --noStackTrace --runInBand",
+    "test:unit": "npm test -- --watch -c jest-unit.config.ts",
+    "test:staged": "jest",
+    "test:verbose": "jest --runInBand",
+    "test:ci": "npm test -- --coverage"
   },
   "keywords": [],
   "author": "",

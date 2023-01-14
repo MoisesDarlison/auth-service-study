@@ -7,7 +7,7 @@
     "prepare": "husky install",
     "test": "jest --silent --noStackTrace --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit.config.ts",
-    "test:staged": "jest",
+    "test:staged": "npm test --findRelatedTests",
     "test:verbose": "jest --runInBand",
     "test:ci": "npm test -- --coverage"
   },

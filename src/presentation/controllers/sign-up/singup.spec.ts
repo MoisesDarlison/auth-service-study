@@ -4,10 +4,10 @@ import {
   ServerError,
 } from "../../errors";
 import {
-  EmailValidator,
   AccountModel,
   AddAccount,
   AddAccountModel,
+  EmailValidator,
 } from "./sign-up.protocols";
 
 import { SignUpController } from "./sing-up.controller";
@@ -181,5 +181,24 @@ describe("SignUp Controller", () => {
       email: "spy_test@example.com",
       password: "password_test",
     });
+  });
+
+  it("Should return 500 if AddAccount throws", () => {
+    const { sut, addAccountStub } = makeSut();
+    jest.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const httpRequest = {
+      body: {
+        email: "test@example.com",
+        password: "password_test",
+        passwordConfirmation: "password_test",
+      },
+    };
+
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(500);
+    expect(httpResponse.body).toEqual(new ServerError());
   });
 });

@@ -1,9 +1,9 @@
-import { AccountModel } from "../../../domain/models/account.model";
 import {
   AddAccount,
   AddAccountModel,
-} from "../../../domain/use-cases/add-account.use-case";
-import { Encrypter } from "./protocols/encrypter.protocol";
+  AccountModel,
+  Encrypter,
+} from "./db-add-account.protocols";
 
 export class DbAddAccount implements AddAccount {
   private readonly encrypter: Encrypter;

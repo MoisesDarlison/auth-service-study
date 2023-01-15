@@ -1,10 +1,10 @@
 import { DbAddAccount } from "./db-add-account";
-import { Encrypter } from "./db-add-account.protocols";
-
-interface SutTypes {
-  sut: DbAddAccount;
-  encryptStub: Encrypter;
-}
+import {
+  AccountModel,
+  AddAccountModel,
+  AddAccountRepository,
+  Encrypter,
+} from "./db-add-account.protocols";
 
 const makeEncrypter = (): Encrypter => {
   class EncryptStub implements Encrypter {
@@ -15,11 +15,34 @@ const makeEncrypter = (): Encrypter => {
   return new EncryptStub();
 };
 
+const makeAddAccountRepository = (): AddAccountRepository => {
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add(account: AddAccountModel): Promise<AccountModel> {
+      const fakeAccount = {
+        id: "test_uuid",
+        nickName: "nickName",
+        email: "test@email.com",
+        password: "hashed_password",
+      };
+      return new Promise((resolve) => {
+        resolve(fakeAccount);
+      });
+    }
+  }
+  return new AddAccountRepositoryStub();
+};
+
+interface SutTypes {
+  sut: DbAddAccount;
+  encryptStub: Encrypter;
+  addAccountRepositoryStub: AddAccountRepository;
+}
 const makeSut = (): SutTypes => {
   const encryptStub = makeEncrypter();
-  const sut = new DbAddAccount(encryptStub);
+  const addAccountRepositoryStub = makeAddAccountRepository();
+  const sut = new DbAddAccount(encryptStub, addAccountRepositoryStub);
 
-  return { sut, encryptStub };
+  return { sut, encryptStub, addAccountRepositoryStub };
 };
 
 describe("DbAddAccount UseCase", () => {
@@ -55,5 +78,24 @@ describe("DbAddAccount UseCase", () => {
     const accountPromise = sut.add(accountInput);
 
     await expect(accountPromise).rejects.toThrow();
+  });
+
+  it("Should call AddAccountRepository with correct values", async () => {
+    const { sut, addAccountRepositoryStub } = makeSut();
+    const addSpy = jest.spyOn(addAccountRepositoryStub, "add");
+
+    const accountInput = {
+      nickName: "nickName",
+      email: "test@email.com",
+      password: "input_password",
+    };
+
+    await sut.add(accountInput);
+
+    expect(addSpy).toHaveBeenCalledWith({
+      nickName: "nickName",
+      email: "test@email.com",
+      password: "hashed_password",
+    });
   });
 });

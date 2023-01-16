@@ -24,7 +24,8 @@ export class SignUpController implements Controller {
         if (!httpRequest.body[field])
           return badRequest(new MissingParamNames(field));
       }
-      const { email, password, passwordConfirmation } = httpRequest.body;
+      const { nickName, email, password, passwordConfirmation } =
+        httpRequest.body;
 
       if (passwordConfirmation !== password)
         return badRequest(new InvalidParamError("passwordConfirmation"));
@@ -33,6 +34,7 @@ export class SignUpController implements Controller {
       if (!isValidEmail) return badRequest(new InvalidParamError("email"));
 
       const account = await this.addAccount.add({
+        nickName,
         email,
         password,
       });

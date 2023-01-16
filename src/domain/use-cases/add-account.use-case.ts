@@ -1,6 +1,7 @@
 import { AccountModel } from "../models/account.model";
 
 export interface AddAccountModel {
+  nickName: string;
   email: string;
   password: string;
 }

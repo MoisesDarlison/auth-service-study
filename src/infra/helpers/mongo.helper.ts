@@ -1,7 +1,7 @@
 import { Collection, MongoClient, ObjectId } from "mongodb";
 
 export const MongoHelper = {
-  client: null as MongoClient,
+  client: null as unknown as MongoClient,
   async connect(uri: string) {
     this.client = new MongoClient(uri);
     await this.client.connect();

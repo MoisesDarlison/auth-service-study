@@ -1,12 +1,14 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { MongoHelper } from "../../../helpers/mongo.helper";
 import { AccountMongoRepository } from "./account";
+
 const makeSut = (): AccountMongoRepository => new AccountMongoRepository();
 
 describe("Account MongoDb Repository", () => {
-  //   const dbName = "myProject";
+  let mongoMemoryServer: MongoMemoryServer;
+
   beforeAll(async () => {
-    const mongoMemoryServer = await MongoMemoryServer.create();
+    mongoMemoryServer = await MongoMemoryServer.create();
     await MongoHelper.connect(mongoMemoryServer.getUri());
   });
 
@@ -17,6 +19,7 @@ describe("Account MongoDb Repository", () => {
 
   afterAll(async () => {
     await MongoHelper.disconnect();
+    await mongoMemoryServer.stop();
   });
 
   it("Should return a account on success", async () => {

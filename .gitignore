@@ -2,6 +2,7 @@ node_modules
 dist
 coverage
 .vscode
+.env
 
 #Notations
 z-obs

@@ -11,7 +11,7 @@ export const MongoHelper = {
   },
 
   getCollection(dbName: string): Collection {
-    return this.client.db().collection(dbName);
+    return this.client.db("AuthService").collection(dbName);
   },
 
   map(collection: any, id: ObjectId): any {

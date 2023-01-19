@@ -14,23 +14,32 @@ const makeControllerStub = (): Controller => {
           id: "test",
         },
       };
-      return new Promise((resolve, reject) => resolve(httpResponse));
+      return new Promise((resolve) => resolve(httpResponse));
     }
   }
   return new ControllerStub();
 };
 
+const makeStub = () => {
+  const fakeController = makeControllerStub();
+  const sut = new LogsControllerDecorator(fakeController);
+  return {
+    fakeController,
+    sut,
+  };
+};
+
 describe("LogsController Decorator", () => {
   it("Should return the some result of controller", () => {
-    const initialController = makeControllerStub();
-    const sut = new LogsControllerDecorator(initialController);
+    const { fakeController, sut } = makeStub();
+
     const httpRequest: HttpRequest = {
       body: {
         email: "email@example.com",
       },
     };
 
-    const initialData = initialController.handle(httpRequest);
+    const initialData = fakeController.handle(httpRequest);
     const sutResponse = sut.handle(httpRequest);
 
     expect(sutResponse).toEqual(initialData);
